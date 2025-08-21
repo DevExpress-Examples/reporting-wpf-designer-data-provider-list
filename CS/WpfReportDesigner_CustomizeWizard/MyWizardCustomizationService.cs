@@ -1,31 +1,38 @@
-using System.Collections.Generic;
 using DevExpress.DataAccess.Native.Sql.ConnectionStrategies;
+using DevExpress.DataAccess.UI.Wizard;
 using DevExpress.DataAccess.Wizard.Model;
 using DevExpress.DataAccess.Wizard.Presenters;
+using DevExpress.DataAccess.Wizard.Services;
 using DevExpress.Utils.IoC;
 using DevExpress.Xpf.DataAccess.DataSourceWizard;
 using DevExpress.Xpf.Reports.UserDesigner.ReportWizard;
 using DevExpress.Xpf.Reports.UserDesigner.ReportWizard.Pages;
 using DevExpress.XtraReports.UI;
 using DevExpress.XtraReports.Wizards;
-using DevExpress.DataAccess.UI.Wizard;
 using DevExpress.XtraReports.Wizards.Presenters;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WpfReportDesigner_CustomizeWizard {
     public class MyWizardCustomizationService : IWizardCustomizationService {
+
+        static readonly string[] allowedSqlDataSourceProviders = new[] {
+            "MSSqlServer", "Oracle", "Amazon Redshift", "MySql", "Postgres", "SQLite"
+        };
         void IDataSourceWizardCustomizationService.CustomizeDataSourceWizard(DataSourceWizardCustomizationModel customization, ViewModelSourceIntegrityContainer container) {
-            if(customization.StartPage == typeof(ChooseDataSourceTypePage<IDataSourceModel>)) {
+            if(customization.StartPage == typeof(ChooseExistingConnectionPage<IDataSourceModel>)) {
                 customization.Model.DataSourceType = DataSourceType.Xpo;
-                customization.StartPage = typeof(ConnectionPropertiesPage<IDataSourceModel>);
+                customization.StartPage = typeof(ChooseDataProviderPage<IDataSourceModel>);
             }
             CustomizeProviders(container);
         }
 
         void IWizardCustomizationService.CustomizeReportWizard(ReportWizardCustomizationModel customization, ViewModelSourceIntegrityContainer container) {
-            if(customization.StartPage == typeof(ChooseReportTypePage<XtraReportModel>)) {
+            if (customization.StartPage == typeof(ChooseReportTypePage<XtraReportModel>))
+            {
                 customization.Model.ReportType = ReportType.Standard;
                 customization.Model.DataSourceType = DataSourceType.Xpo;
-                customization.StartPage = typeof(ConnectionPropertiesPage<XtraReportModel>);
+                customization.StartPage = typeof(ChooseDataProviderPage<XtraReportModel>);
             }
             CustomizeProviders(container);
         }
@@ -43,7 +50,9 @@ namespace WpfReportDesigner_CustomizeWizard {
 
         static void CustomizeProviders(IntegrityContainer container) {
             var providers = container.Resolve<List<ProviderLookupItem>>();
-            providers.RemoveAll((ProviderLookupItem x) => x.ProviderKey != "MSSqlServer");
+            providers.RemoveAll(x => !allowedSqlDataSourceProviders.Contains(x.ProviderKey));
+            container.RegisterInstance<DataSourceTypes>(new DataSourceTypes(WizardDataSourceType.Sql));
+
         }
     }
 }
