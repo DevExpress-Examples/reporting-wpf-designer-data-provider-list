@@ -6,23 +6,75 @@
 <!-- default badges end -->
 # Reporting for WPF - Customize the Data Providers List in the Data Source Wizard
 
-The following example customizes the [Report Wizard](https://docs.devexpress.devx/XtraReports/114841/desktop-reporting/wpf-reporting/end-user-report-designer-for-wpf/gui/report-wizard) and [Data Source Wizard](https://docs.devexpress.devx/XtraReports/400461/desktop-reporting/wpf-reporting/end-user-report-designer-for-wpf/gui/data-source-wizard0) pages. Both wizards display "Select a Data Connection Type" (`ChooseDataProviderPage`) as the start page. The list of available SQL data source providers is limited to MSSQLServer, Oracle, Amazon Redshift, MySQL, Postgres, and SQLite. 
+The example customizes [Report Wizard](https://docs.devexpress.devx/XtraReports/114841/desktop-reporting/wpf-reporting/end-user-report-designer-for-wpf/gui/report-wizard) and [Data Source Wizard](https://docs.devexpress.devx/XtraReports/400461/desktop-reporting/wpf-reporting/end-user-report-designer-for-wpf/gui/data-source-wizard0) to achieve the following:
+
+- Display `ChooseDataProviderPage` ("Select a Data Connection Type") as the start page.
+- Restrict available SQL data source providers to MSSQLServer, Oracle, Amazon Redshift, MySQL, Postgres, and SQLite.
 
 ![](/images/custom-page.png)
 
 ## Implementation Details
 
-The `MyWizardCustomizationService` class implements the [IWizardCustomizationService](https://docs.devexpress.com/WPF/DevExpress.Xpf.Reports.UserDesigner.ReportWizard.IWizardCustomizationService) interface and allows you to customize the Data Source and Report Wizards. The `CustomizeDataSourceWizard` and `CustomizeReportWizard` methods contain the main logic for wizard customization:
+### Customization Service
 
-* `StartPage` - sets the wizard start page to the `ChooseDataProviderPage`.
+To customize Data Source and Report Wizards, create a customization service (`MyWizardCustomizationService` in this example) that implements the [IWizardCustomizationService](https://docs.devexpress.com/WPF/DevExpress.Xpf.Reports.UserDesigner.ReportWizard.IWizardCustomizationService) interface.  
+
+`CustomizeDataSourceWizard` and `CustomizeReportWizard` methods contain the main logic for wizard customization:
+
+* `StartPage` - sets the wizard start page to `ChooseDataProviderPage` ("Select a Data Connection Type").
 * `ReportType` - specifies the report type in the report model.
 * `DataSourceType` - specifies the data source type in the report model.
 
-The `CustomizeProviders` method limits the available data source types and providers to a predefined list.
+The `CustomizeProviders` method limits available data source types and providers to a predefined list.
 
-The [ReportDesigner.ServicesRegistry](https://docs.devexpress.com/WPF/DevExpress.Xpf.Reports.UserDesigner.ReportDesignerBase.ServicesRegistry) property registers the `MyWizardCustomizationService` type in XAML.
+```cs
+    // ...
+    // Сustomization service for the Data Source and Report wizards.
+    public class MyWizardCustomizationService : IWizardCustomizationService {
 
+        static readonly string[] allowedSqlDataSourceProviders = new[] {
+            "MSSqlServer", "Oracle", "Amazon Redshift", "MySql", "Postgres", "SQLite"
+        };
+        // Modifies the Data Source wizard's start page and data source type. 
+        void IDataSourceWizardCustomizationService.CustomizeDataSourceWizard(DataSourceWizardCustomizationModel customization, ViewModelSourceIntegrityContainer container) {
+            if(customization.StartPage == typeof(ChooseExistingConnectionPage<IDataSourceModel>)) {
+                customization.Model.DataSourceType = DataSourceType.Xpo;
+                customization.StartPage = typeof(ChooseDataProviderPage<IDataSourceModel>);
+            }
+            CustomizeProviders(container);
+        }
+        // Modifies the Report wizard's start page, data source type, and report type.
+        void IWizardCustomizationService.CustomizeReportWizard(ReportWizardCustomizationModel customization, ViewModelSourceIntegrityContainer container) {
+            if (customization.StartPage == typeof(ChooseReportTypePage<XtraReportModel>)) {
+                customization.Model.ReportType = ReportType.Standard;
+                customization.Model.DataSourceType = DataSourceType.Xpo;
+                customization.StartPage = typeof(ChooseDataProviderPage<XtraReportModel>);
+            }
+            CustomizeProviders(container);
+        }
+        // ...
+        // Filters available SQL data source providers and registers allowed providers in the container.
+        static void CustomizeProviders(IntegrityContainer container) {
+            var providers = container.Resolve<List<ProviderLookupItem>>();
+            providers.RemoveAll(x => !allowedSqlDataSourceProviders.Contains(x.ProviderKey));
+            container.RegisterInstance<DataSourceTypes>(new DataSourceTypes(WizardDataSourceType.Sql));
 
+        }
+    }
+}
+```
+
+### Service Registration
+
+The [ReportDesigner.ServicesRegistry](https://docs.devexpress.com/WPF/DevExpress.Xpf.Reports.UserDesigner.ReportDesignerBase.ServicesRegistry) property registers the `MyWizardCustomizationService` type in XAML and applies customization logic.
+
+```xaml
+<dxrud:ReportDesigner x:Name="reportDesigner">
+    <dxrud:ReportDesigner.ServicesRegistry>
+        <dxda:TypeEntry ServiceType="{x:Type dxrudw:IWizardCustomizationService}" ConcreteType="{x:Type local:MyWizardCustomizationService}" />
+    </dxrud:ReportDesigner.ServicesRegistry>
+</dxrud:ReportDesigner>
+```
 ## Files to Review
 
 * [MainWindow.xaml](./CS/WpfReportDesigner_CustomizeWizard/MainWindow.xaml) (VB: [MainWindow.xaml](./VB/WpfReportDesigner_CustomizeWizard/MainWindow.xaml))
@@ -43,5 +95,6 @@ The [ReportDesigner.ServicesRegistry](https://docs.devexpress.com/WPF/DevExpress
 
 (you will be redirected to DevExpress.com to submit your response)
 <!-- feedback end -->
+
 
 
