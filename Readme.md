@@ -1,5 +1,5 @@
 <!-- default badges list -->
-![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/128605251/23.1.4%2B)
+![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/128605251/25.1.4%2B)
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T456882)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 [![](https://img.shields.io/badge/💬_Leave_Feedback-feecdd?style=flat-square)](#does-this-example-address-your-development-requirementsobjectives)
@@ -12,11 +12,11 @@ The following example customizes the [Report Wizard](https://docs.devexpress.dev
 
 ## Implementation Details
 
-The `WizardCustomizationService` class implements the [IWizardCustomizationService](https://docs.devexpress.com/WPF/DevExpress.Xpf.Reports.UserDesigner.ReportWizard.IWizardCustomizationService) interface and allows you to customize the Data Source and Report Wizards. The `CustomizeDataSourceWizard` and `CustomizeReportWizard` methods contain the main logic for wizard customization:
+The `MyWizardCustomizationService` class implements the [IWizardCustomizationService](https://docs.devexpress.com/WPF/DevExpress.Xpf.Reports.UserDesigner.ReportWizard.IWizardCustomizationService) interface and allows you to customize the Data Source and Report Wizards. The `CustomizeDataSourceWizard` and `CustomizeReportWizard` methods contain the main logic for wizard customization:
 
 * `StartPage` - sets the wizard start page to the `ChooseDataProviderPage`.
-* `ReportType` - specifies the report type in the wizard customization model.
-* `DataSourceType` - specifies the data source type in the wizard customization model.
+* `ReportType` - specifies the report type in the report model.
+* `DataSourceType` - specifies the data source type in the report model.
 
 The `CustomizeProviders` method limits the available data source types and providers to a predefined list.
 
@@ -43,3 +43,5 @@ The [ReportDesigner.ServicesRegistry](https://docs.devexpress.com/WPF/DevExpress
 
 (you will be redirected to DevExpress.com to submit your response)
 <!-- feedback end -->
+
+
