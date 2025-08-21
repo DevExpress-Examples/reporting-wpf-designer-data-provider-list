@@ -12,7 +12,7 @@ The following example customizes the [Report Wizard](https://docs.devexpress.dev
 
 ## Implementation Details
 
-The `WizardCustomizationService` class implements the [IWizardCustomizationService](https://docs.devexpress.com/WPF/DevExpress.Xpf.Reports.UserDesigner.ReportWizard.IWizardCustomizationService) interface and allows you to customize the Data Source and Report Wizards. The `CustomizeDataSourceWizard` and `CustomizeReportWizard` methods contain the main logic for wizard customization:
+The `MyWizardCustomizationService` class implements the [IWizardCustomizationService](https://docs.devexpress.com/WPF/DevExpress.Xpf.Reports.UserDesigner.ReportWizard.IWizardCustomizationService) interface and allows you to customize the Data Source and Report Wizards. The `CustomizeDataSourceWizard` and `CustomizeReportWizard` methods contain the main logic for wizard customization:
 
 * `StartPage` - sets the wizard start page to the `ChooseDataProviderPage`.
 * `ReportType` - specifies the report type in the report model.
@@ -43,4 +43,5 @@ The [ReportDesigner.ServicesRegistry](https://docs.devexpress.com/WPF/DevExpress
 
 (you will be redirected to DevExpress.com to submit your response)
 <!-- feedback end -->
+
 
