@@ -1,12 +1,10 @@
-using DevExpress.DataAccess.Native.Sql.ConnectionStrategies;
-using DevExpress.DataAccess.UI.Wizard;
+﻿using DevExpress.DataAccess.UI.Wizard;
 using DevExpress.DataAccess.Wizard.Model;
 using DevExpress.DataAccess.Wizard.Presenters;
 using DevExpress.DataAccess.Wizard.Services;
 using DevExpress.Utils.IoC;
 using DevExpress.Xpf.DataAccess.DataSourceWizard;
 using DevExpress.Xpf.Reports.UserDesigner.ReportWizard;
-using DevExpress.Xpf.Reports.UserDesigner.ReportWizard.Pages;
 using DevExpress.XtraReports.UI;
 using DevExpress.XtraReports.Wizards;
 using DevExpress.XtraReports.Wizards.Presenters;
@@ -14,11 +12,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace WpfReportDesigner_CustomizeWizard {
+    // Сustomization service for the Data Source and Report wizards.
     public class MyWizardCustomizationService : IWizardCustomizationService {
 
         static readonly string[] allowedSqlDataSourceProviders = new[] {
             "MSSqlServer", "Oracle", "Amazon Redshift", "MySql", "Postgres", "SQLite"
         };
+        // Modifies the Data Source wizard's start page and data source type. 
         void IDataSourceWizardCustomizationService.CustomizeDataSourceWizard(DataSourceWizardCustomizationModel customization, ViewModelSourceIntegrityContainer container) {
             if(customization.StartPage == typeof(ChooseExistingConnectionPage<IDataSourceModel>)) {
                 customization.Model.DataSourceType = DataSourceType.Xpo;
@@ -26,28 +26,27 @@ namespace WpfReportDesigner_CustomizeWizard {
             }
             CustomizeProviders(container);
         }
-
+        // Modifies the Report wizard's start page, data source type, and report type.
         void IWizardCustomizationService.CustomizeReportWizard(ReportWizardCustomizationModel customization, ViewModelSourceIntegrityContainer container) {
-            if (customization.StartPage == typeof(ChooseReportTypePage<XtraReportModel>))
-            {
+            if (customization.StartPage == typeof(ChooseReportTypePage<XtraReportModel>)) {
                 customization.Model.ReportType = ReportType.Standard;
                 customization.Model.DataSourceType = DataSourceType.Xpo;
                 customization.StartPage = typeof(ChooseDataProviderPage<XtraReportModel>);
             }
             CustomizeProviders(container);
         }
-
+        // Attempts to create a data source from the specified model.
         bool IDataSourceWizardCustomizationService.TryCreateDataSource(IDataSourceModel model, out object dataSource, out string dataMember) {
             dataSource = null;
             dataMember = null;
             return false;
         }
-
+        // Attempts to create a report from the specified model.
         bool IWizardCustomizationService.TryCreateReport(XtraReportModel model, out XtraReport report) {
             report = null;
             return false;
         }
-
+        // Filters the available SQL data source providers and registers the allowed providers in the container.
         static void CustomizeProviders(IntegrityContainer container) {
             var providers = container.Resolve<List<ProviderLookupItem>>();
             providers.RemoveAll(x => !allowedSqlDataSourceProviders.Contains(x.ProviderKey));
