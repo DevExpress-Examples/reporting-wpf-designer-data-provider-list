@@ -90,5 +90,4 @@ The [ReportDesigner.ServicesRegistry](https://docs.devexpress.com/WPF/DevExpress
 
 [<img src="https://www.devexpress.com/support/examples/i/yes-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=reporting-wpf-designer-data-provider-list&~~~was_helpful=yes) [<img src="https://www.devexpress.com/support/examples/i/no-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=reporting-wpf-designer-data-provider-list&~~~was_helpful=no)
 
-(you will be redirected to DevExpress.com to submit your response)
 <!-- feedback end -->
