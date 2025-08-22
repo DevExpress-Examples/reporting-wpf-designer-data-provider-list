@@ -6,7 +6,7 @@
 <!-- default badges end -->
 # Reporting for WPF - Customize the Data Providers List in the Data Source Wizard
 
-The following example customizes the [Report Wizard](https://docs.devexpress.devx/XtraReports/114841/desktop-reporting/wpf-reporting/end-user-report-designer-for-wpf/gui/report-wizard) and [Data Source Wizard](https://docs.devexpress.devx/XtraReports/400461/desktop-reporting/wpf-reporting/end-user-report-designer-for-wpf/gui/data-source-wizard) pages. Both wizards display "Select a Data Connection Type" (`ChooseDataProviderPage`) as the start page. The list of available SQL data source providers is limited to MSSQLServer, Oracle, Amazon Redshift, MySQL, Postgres, and SQLite. 
+The following example customizes the [Report Wizard](http://docs.devexpress.com/XtraReports/114841/desktop-reporting/wpf-reporting/end-user-report-designer-for-wpf/gui/report-wizard) and [Data Source Wizard](http://docs.devexpress.com/XtraReports/400461/desktop-reporting/wpf-reporting/end-user-report-designer-for-wpf/gui/data-source-wizard) pages. Both wizards display "Select a Data Connection Type" (`ChooseDataProviderPage`) as the start page. The list of available SQL data source providers is limited to MSSQLServer, Oracle, Amazon Redshift, MySQL, Postgres, and SQLite. 
 
 ![](/images/custom-page.png)
 
@@ -43,6 +43,7 @@ The [ReportDesigner.ServicesRegistry](https://docs.devexpress.com/WPF/DevExpress
 
 (you will be redirected to DevExpress.com to submit your response)
 <!-- feedback end -->
+
 
 
 
